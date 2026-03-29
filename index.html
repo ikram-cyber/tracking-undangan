@@ -36,7 +36,6 @@
         .btn-add:active { transform: scale(0.98); }
         .btn-cancel { width: 100%; padding: 12px; background: #94a3b8; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; display: none; }
 
-        /* Toolbar Export/Print */
         .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
         .btn-tool { flex: 1; min-width: 80px; padding: 10px; font-size: 11px; font-weight: bold; color: white; border: none; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
         .btn-tool.print { background: #64748b; }
@@ -44,10 +43,25 @@
         .btn-tool.backup { background: #3b82f6; }
         .btn-tool.restore { background: #8b5cf6; }
 
-        .table-wrapper { background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow-x: auto; }
+        .stats { display: flex; gap: 10px; margin-bottom: 15px; }
+        .stat-box { flex: 1; background: #fff; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #e2e8f0; }
+        .stat-val { font-size: 16px; font-weight: bold; display: block; }
+        .stat-lbl { font-size: 10px; color: #64748b; text-transform: uppercase; }
+
+        /* SPREADSHEET UPGRADES */
+        .search-box { margin-bottom: 15px; }
+        .search-box input { margin-bottom: 0; background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%2394a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>') no-repeat 12px center; padding-left: 35px; }
+        
+        /* Table Wrapper with Scroll & Sticky Header */
+        .table-wrapper { background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow-x: auto; max-height: 450px; overflow-y: auto; }
         table { width: 100%; border-collapse: collapse; min-width: 650px; font-size: 12px; }
-        th { background: var(--header-table); color: white; padding: 12px 8px; text-align: left; border: 1px solid #e2e8f0; }
+        th { background: var(--header-table); color: white; padding: 12px 8px; text-align: left; border: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 10; cursor: pointer; user-select: none; transition: background 0.2s; }
+        th:hover { background: #0284c7; }
         td { padding: 10px 8px; border: 1px solid #e2e8f0; vertical-align: middle; background: #fff; }
+
+        /* Sort Indicator */
+        .sort-icon { font-size: 10px; margin-left: 4px; opacity: 0.5; }
+        th.active-sort .sort-icon { opacity: 1; color: #fef08a; }
 
         .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; display: inline-block; text-align: center; }
         .type-online { background: var(--c-online); color: white; }
@@ -72,18 +86,12 @@
         .btn-del { color: #ef4444; font-weight: bold; }
         .btn-edit { color: var(--c-edit); }
 
-        .stats { display: flex; gap: 10px; margin-bottom: 15px; }
-        .stat-box { flex: 1; background: #fff; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #e2e8f0; }
-        .stat-val { font-size: 16px; font-weight: bold; display: block; }
-        .stat-lbl { font-size: 10px; color: #64748b; text-transform: uppercase; }
-
-        /* MEDIA PRINT (Untuk simpan PDF / Print Kertas) */
         @media print {
             body { padding: 0; background: white; }
-            .card, .toolbar, .stats, .action-cell, th:last-child, td:last-child { display: none !important; }
-            .table-wrapper { border: none; overflow: visible; }
+            .card, .toolbar, .stats, .search-box, .action-cell, th:last-child, td:last-child { display: none !important; }
+            .table-wrapper { border: none; overflow: visible; max-height: none; }
             table { width: 100%; border: 1px solid #000; }
-            th { background: #e2e8f0 !important; color: #000 !important; border: 1px solid #000; -webkit-print-color-adjust: exact; }
+            th { background: #e2e8f0 !important; color: #000 !important; border: 1px solid #000; position: static; }
             td { border: 1px solid #000; }
             .badge { border: 1px solid #000; }
         }
@@ -140,16 +148,20 @@
         <div class="stat-box"><span class="stat-val" id="count-cetak">0</span><span class="stat-lbl">Cetak</span></div>
     </div>
 
+    <div class="search-box">
+        <input type="text" id="search-input" placeholder="Cari nama tamu atau kategori..." onkeyup="render()">
+    </div>
+
     <div class="table-wrapper">
         <table>
             <thead>
                 <tr>
                     <th width="40">Tr</th>
-                    <th>Nama</th>
-                    <th width="100">Online/Cetak</th>
-                    <th width="80">Undangan</th>
-                    <th width="80">Share</th>
-                    <th width="120">Kategori</th>
+                    <th onclick="urutkanData('nama')" id="th-nama">Nama <span class="sort-icon">↕</span></th>
+                    <th width="100" onclick="urutkanData('tipe')" id="th-tipe">Tipe <span class="sort-icon">↕</span></th>
+                    <th width="80" onclick="urutkanData('undangan_ready')" id="th-undangan_ready">Undangan <span class="sort-icon">↕</span></th>
+                    <th width="80" onclick="urutkanData('share_ready')" id="th-share_ready">Share <span class="sort-icon">↕</span></th>
+                    <th width="120" onclick="urutkanData('kategori')" id="th-kategori">Kategori <span class="sort-icon">↕</span></th>
                     <th width="70">Opsi</th>
                 </tr>
             </thead>
@@ -160,8 +172,10 @@
 <script>
     let db_undangan = JSON.parse(localStorage.getItem('undangan_v2')) || [];
     let idEditAktif = null; 
+    let sortBy = ''; 
+    let sortAsc = true;
 
-    // === FITUR SIMPAN & EDIT ===
+    // SIMPAN & EDIT
     function simpanData() {
         const nama = document.getElementById('u-nama').value.trim();
         const tipe = document.getElementById('u-tipe').value;
@@ -172,21 +186,11 @@
         if (idEditAktif) {
             const idx = db_undangan.findIndex(x => x.id === idEditAktif);
             if(idx !== -1) {
-                db_undangan[idx].nama = nama;
-                db_undangan[idx].tipe = tipe;
-                db_undangan[idx].kategori = kategori;
+                db_undangan[idx].nama = nama; db_undangan[idx].tipe = tipe; db_undangan[idx].kategori = kategori;
             }
             batalEdit(); 
         } else {
-            const data = {
-                id: Date.now(),
-                nama: nama,
-                tipe: tipe,
-                kategori: kategori,
-                undangan_ready: false,
-                share_ready: false
-            };
-            db_undangan.push(data);
+            db_undangan.push({ id: Date.now(), nama: nama, tipe: tipe, kategori: kategori, undangan_ready: false, share_ready: false });
             document.getElementById('u-nama').value = ""; 
         }
         save(); render();
@@ -212,19 +216,14 @@
         idEditAktif = null;
         document.getElementById('u-nama').value = "";
         document.getElementById('form-title').innerText = "Tambah Tamu Undangan";
-        
         const btnSubmit = document.getElementById('btn-submit');
-        btnSubmit.innerText = "TAMBAH KE DAFTAR";
-        btnSubmit.style.background = "#0f172a";
+        btnSubmit.innerText = "TAMBAH KE DAFTAR"; btnSubmit.style.background = "#0f172a";
         document.getElementById('btn-cancel').style.display = "none";
     }
 
     function toggleCheck(id, field) {
         const idx = db_undangan.findIndex(x => x.id === id);
-        if(idx !== -1) {
-            db_undangan[idx][field] = !db_undangan[idx][field];
-            save();
-        }
+        if(idx !== -1) { db_undangan[idx][field] = !db_undangan[idx][field]; save(); render(); }
     }
 
     function hapus(id) {
@@ -235,92 +234,98 @@
         }
     }
 
-    function save() {
-        localStorage.setItem('undangan_v2', JSON.stringify(db_undangan));
-    }
+    function save() { localStorage.setItem('undangan_v2', JSON.stringify(db_undangan)); }
 
-    // === FITUR BARU: EXPORT EXCEL (CSV) ===
-    function exportExcel() {
-        if(db_undangan.length === 0) return alert("Belum ada data untuk diekspor!");
+    // SORTING (Spreadsheet feature)
+    function urutkanData(kolom) {
+        if (sortBy === kolom) {
+            sortAsc = !sortAsc; // Balik urutan jika klik kolom yang sama
+        } else {
+            sortBy = kolom;
+            sortAsc = true; // Default A-Z
+        }
         
-        // Header
-        let csvContent = "No,Nama Lengkap,Tipe,Status Undangan,Status Share,Kategori\n";
-        
-        // Data
-        db_undangan.forEach((u, index) => {
-            let statusUndangan = u.undangan_ready ? "Selesai" : "Belum";
-            let statusShare = u.share_ready ? "Selesai" : "Belum";
-            // Escape koma pada nama jika ada
-            let namaAman = `"${u.nama}"`;
-            csvContent += `${index + 1},${namaAman},${u.tipe},${statusUndangan},${statusShare},${u.kategori}\n`;
+        // Update Icon UI
+        document.querySelectorAll('th').forEach(th => {
+            th.classList.remove('active-sort');
+            let icon = th.querySelector('.sort-icon');
+            if(icon) icon.innerText = '↕';
         });
+        
+        const activeTh = document.getElementById('th-' + kolom);
+        activeTh.classList.add('active-sort');
+        activeTh.querySelector('.sort-icon').innerText = sortAsc ? '▲' : '▼';
 
-        // Download mechanism
-        let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        let link = document.createElement("a");
-        let url = URL.createObjectURL(blob);
-        link.setAttribute("href", url);
-        link.setAttribute("download", "Daftar_Tamu_Undangan.csv");
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        render();
     }
 
-    // === FITUR BARU: BACKUP DATA (JSON) ===
+    // EXPORT & BACKUP
+    function exportExcel() {
+        let csvContent = "No,Nama Lengkap,Tipe,Status Undangan,Status Share,Kategori\n";
+        db_undangan.forEach((u, index) => {
+            let sU = u.undangan_ready ? "Selesai" : "Belum";
+            let sS = u.share_ready ? "Selesai" : "Belum";
+            csvContent += `${index + 1},"${u.nama}",${u.tipe},${sU},${sS},${u.kategori}\n`;
+        });
+        let link = document.createElement("a");
+        link.href = URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }));
+        link.download = "Daftar_Tamu_Undangan.csv"; link.click();
+    }
+
     function backupData() {
-        if(db_undangan.length === 0) return alert("Belum ada data untuk di-backup!");
-        
-        let dataStr = JSON.stringify(db_undangan, null, 2);
-        let blob = new Blob([dataStr], { type: 'application/json' });
         let link = document.createElement("a");
-        let url = URL.createObjectURL(blob);
-        
-        link.setAttribute("href", url);
-        link.setAttribute("download", `Backup_Undangan_${new Date().getTime()}.json`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        link.href = URL.createObjectURL(new Blob([JSON.stringify(db_undangan, null, 2)], { type: 'application/json' }));
+        link.download = `Backup_Undangan_${new Date().getTime()}.json`; link.click();
     }
 
-    // === FITUR BARU: RESTORE DATA (JSON) ===
     function restoreData(event) {
         const file = event.target.files[0];
         if(!file) return;
-
         const reader = new FileReader();
         reader.onload = function(e) {
             try {
                 const dataRestored = JSON.parse(e.target.result);
-                if(Array.isArray(dataRestored)) {
-                    if(confirm("Apakah Anda yakin ingin menimpa data yang ada dengan data dari file backup?")) {
-                        db_undangan = dataRestored;
-                        save();
-                        render();
-                        alert("Data berhasil di-restore!");
-                    }
-                } else {
-                    alert("Format file tidak sesuai!");
+                if(Array.isArray(dataRestored) && confirm("Timpa data saat ini dengan file backup?")) {
+                    db_undangan = dataRestored; save(); render(); alert("Data berhasil di-restore!");
                 }
-            } catch (err) {
-                alert("Gagal membaca file backup!");
-            }
+            } catch (err) { alert("Format file tidak sesuai!"); }
         };
-        reader.readAsText(file);
-        // Reset input file agar bisa pilih file yang sama lagi
-        event.target.value = "";
+        reader.readAsText(file); event.target.value = "";
     }
 
-    // === RENDER TABEL ===
+    // RENDER (WITH SEARCH & SORT)
     function render() {
         const tbody = document.getElementById('list-tabel');
-        let html = "";
+        const keyword = document.getElementById('search-input').value.toLowerCase();
+        
         let cTotal = db_undangan.length;
         let cOnline = 0; let cCetak = 0;
 
-        db_undangan.forEach((u, i) => {
-            if(u.tipe === 'Online') cOnline++; else cCetak++;
+        // Hitung Stat Asli (Bukan dari hasil filter)
+        db_undangan.forEach(u => { if(u.tipe === 'Online') cOnline++; else cCetak++; });
+        document.getElementById('count-total').innerText = cTotal;
+        document.getElementById('count-online').innerText = cOnline;
+        document.getElementById('count-cetak').innerText = cCetak;
 
+        // 1. Filter Data
+        let dataTampil = db_undangan.filter(u => 
+            u.nama.toLowerCase().includes(keyword) || 
+            u.kategori.toLowerCase().includes(keyword)
+        );
+
+        // 2. Sort Data
+        if (sortBy) {
+            dataTampil.sort((a, b) => {
+                let valA = typeof a[sortBy] === 'string' ? a[sortBy].toLowerCase() : a[sortBy];
+                let valB = typeof b[sortBy] === 'string' ? b[sortBy].toLowerCase() : b[sortBy];
+                if (valA < valB) return sortAsc ? -1 : 1;
+                if (valA > valB) return sortAsc ? 1 : -1;
+                return 0;
+            });
+        }
+
+        let html = "";
+        dataTampil.forEach((u, i) => {
             let catClass = "cat-lain"; 
             switch(u.kategori) {
                 case "Keluarga Pria": catClass = "cat-kel-pria"; break;
@@ -337,7 +342,6 @@
                 case "Lain-lain": catClass = "cat-lain"; break;
                 default: if(u.kategori === "Teman SMK") catClass = "cat-smk";
             }
-
             let typeClass = (u.tipe === "Online") ? "type-online" : "type-cetak";
 
             html += `
@@ -356,11 +360,7 @@
             `;
         });
 
-        tbody.innerHTML = html || '<tr><td colspan="7" align="center" style="padding:20px; color:#94a3b8;">Belum ada tamu undangan.</td></tr>';
-        
-        document.getElementById('count-total').innerText = cTotal;
-        document.getElementById('count-online').innerText = cOnline;
-        document.getElementById('count-cetak').innerText = cCetak;
+        tbody.innerHTML = html || `<tr><td colspan="7" align="center" style="padding:20px; color:#94a3b8;">${keyword ? 'Pencarian tidak ditemukan.' : 'Belum ada tamu undangan.'}</td></tr>`;
     }
 
     render();
