@@ -6,16 +6,20 @@
     <title>Manajemen Daftar Undangan</title>
     <style>
         :root { 
-            --bg: #f1f5f9;
-            --header-table: #38bdf8;
-            /* Warna Kategori sesuai Gambar */
+            --bg: #f1f5f9; --header-table: #38bdf8;
             --c-smp: #fef08a; --t-smp: #854d0e;
             --c-smk: #bbf7d0; --t-smk: #166534;
             --c-kost: #1d4ed8; --t-kost: #ffffff;
             --c-kuliah: #e9d5ff; --t-kuliah: #6b21a8;
             --c-kerja: #fbcfe8; --t-kerja: #9d174d;
-            --c-online: #ef4444;
-            --c-cetak: #60a5fa;
+            --c-kel-pria: #bfdbfe; --t-kel-pria: #1e3a8a;
+            --c-kel-wanita: #fecdd3; --t-kel-wanita: #881337;
+            --c-tetangga: #99f6e4; --t-tetangga: #115e59;
+            --c-sd: #fed7aa; --t-sd: #7c2d12;
+            --c-bisnis: #cbd5e1; --t-bisnis: #334155;
+            --c-vip: #fde047; --t-vip: #713f12;
+            --c-lain: #f3f4f6; --t-lain: #374151;
+            --c-online: #ef4444; --c-cetak: #60a5fa; --c-edit: #f59e0b;
         }
         * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         body { background: var(--bg); margin: 0; padding: 15px; color: #334155; }
@@ -23,28 +27,28 @@
         .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); margin-bottom: 20px; }
         h2 { margin-top: 0; font-size: 18px; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
 
-        /* Form Styling */
         label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #64748b; }
-        input[type="text"], select { 
-            width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #cbd5e1; 
-            border-radius: 8px; font-size: 14px; outline: none; transition: 0.2s;
-        }
-        input:focus { border-color: var(--header-table); ring: 2px var(--header-table); }
+        input[type="text"], select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; transition: 0.2s; }
+        input:focus { border-color: var(--header-table); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
         
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn-add { 
-            width: 100%; padding: 14px; background: #0f172a; color: white; 
-            border: none; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer;
-        }
+        .btn-add { width: 100%; padding: 14px; background: #0f172a; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; }
         .btn-add:active { transform: scale(0.98); }
+        .btn-cancel { width: 100%; padding: 12px; background: #94a3b8; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; display: none; }
 
-        /* Table Styling ala Spreadsheet */
+        /* Toolbar Export/Print */
+        .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+        .btn-tool { flex: 1; min-width: 80px; padding: 10px; font-size: 11px; font-weight: bold; color: white; border: none; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .btn-tool.print { background: #64748b; }
+        .btn-tool.excel { background: #10b981; }
+        .btn-tool.backup { background: #3b82f6; }
+        .btn-tool.restore { background: #8b5cf6; }
+
         .table-wrapper { background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; min-width: 600px; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; min-width: 650px; font-size: 12px; }
         th { background: var(--header-table); color: white; padding: 12px 8px; text-align: left; border: 1px solid #e2e8f0; }
         td { padding: 10px 8px; border: 1px solid #e2e8f0; vertical-align: middle; background: #fff; }
 
-        /* Badge & Checkbox */
         .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; display: inline-block; text-align: center; }
         .type-online { background: var(--c-online); color: white; }
         .type-cetak { background: var(--c-cetak); color: white; }
@@ -54,21 +58,41 @@
         .cat-kost { background: var(--c-kost); color: var(--t-kost); }
         .cat-kuliah { background: var(--c-kuliah); color: var(--t-kuliah); }
         .cat-kerja { background: var(--c-kerja); color: var(--t-kerja); }
+        .cat-kel-pria { background: var(--c-kel-pria); color: var(--t-kel-pria); }
+        .cat-kel-wanita { background: var(--c-kel-wanita); color: var(--t-kel-wanita); }
+        .cat-tetangga { background: var(--c-tetangga); color: var(--t-tetangga); }
+        .cat-sd { background: var(--c-sd); color: var(--t-sd); }
+        .cat-bisnis { background: var(--c-bisnis); color: var(--t-bisnis); }
+        .cat-vip { background: var(--c-vip); color: var(--t-vip); }
+        .cat-lain { background: var(--c-lain); color: var(--t-lain); }
 
         input[type="checkbox"] { width: 18px; height: 18px; accent-color: #0f172a; cursor: pointer; }
-        .btn-del { color: #ef4444; background: none; border: none; font-size: 16px; cursor: pointer; font-weight: bold; }
+        .action-cell { display: flex; gap: 8px; justify-content: center; }
+        .btn-icon { background: none; border: none; font-size: 16px; cursor: pointer; padding: 4px; border-radius: 4px; transition: 0.2s; }
+        .btn-del { color: #ef4444; font-weight: bold; }
+        .btn-edit { color: var(--c-edit); }
 
-        /* Statistik Singkat */
         .stats { display: flex; gap: 10px; margin-bottom: 15px; }
         .stat-box { flex: 1; background: #fff; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #e2e8f0; }
         .stat-val { font-size: 16px; font-weight: bold; display: block; }
         .stat-lbl { font-size: 10px; color: #64748b; text-transform: uppercase; }
+
+        /* MEDIA PRINT (Untuk simpan PDF / Print Kertas) */
+        @media print {
+            body { padding: 0; background: white; }
+            .card, .toolbar, .stats, .action-cell, th:last-child, td:last-child { display: none !important; }
+            .table-wrapper { border: none; overflow: visible; }
+            table { width: 100%; border: 1px solid #000; }
+            th { background: #e2e8f0 !important; color: #000 !important; border: 1px solid #000; -webkit-print-color-adjust: exact; }
+            td { border: 1px solid #000; }
+            .badge { border: 1px solid #000; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h2>Tambah Tamu Undangan</h2>
+    <div class="card" id="form-card">
+        <h2 id="form-title">Tambah Tamu Undangan</h2>
         <label>Nama Lengkap</label>
         <input type="text" id="u-nama" placeholder="Masukkan nama tamu...">
         
@@ -83,15 +107,31 @@
             <div>
                 <label>Kategori</label>
                 <select id="u-kategori">
+                    <option value="Keluarga Pria">Keluarga Pria</option>
+                    <option value="Keluarga Wanita">Keluarga Wanita</option>
+                    <option value="Tetangga">Tetangga</option>
+                    <option value="VIP">VIP</option>
+                    <option value="Teman SD">Teman SD</option>
                     <option value="Teman SMP">Teman SMP</option>
-                    <option value="Teman SMK">Teman SMK</option>
-                    <option value="Teman Kostan">Teman Kostan</option>
+                    <option value="Teman SMA/SMK">Teman SMA/SMK</option>
                     <option value="Teman Kuliah">Teman Kuliah</option>
+                    <option value="Teman Kostan">Teman Kostan</option>
                     <option value="Teman Kerja">Teman Kerja</option>
+                    <option value="Rekan Bisnis">Rekan Bisnis</option>
+                    <option value="Lain-lain">Lain-lain</option>
                 </select>
             </div>
         </div>
-        <button class="btn-add" onclick="tambahTamu()">TAMBAH KE DAFTAR</button>
+        <button id="btn-submit" class="btn-add" onclick="simpanData()">TAMBAH KE DAFTAR</button>
+        <button id="btn-cancel" class="btn-cancel" onclick="batalEdit()">BATAL EDIT</button>
+    </div>
+
+    <div class="toolbar">
+        <button class="btn-tool print" onclick="window.print()"><span>🖨️</span> Print / PDF</button>
+        <button class="btn-tool excel" onclick="exportExcel()"><span>📊</span> Excel (CSV)</button>
+        <button class="btn-tool backup" onclick="backupData()"><span>💾</span> Backup</button>
+        <button class="btn-tool restore" onclick="document.getElementById('file-restore').click()"><span>📂</span> Restore</button>
+        <input type="file" id="file-restore" accept=".json" style="display:none" onchange="restoreData(event)">
     </div>
 
     <div class="stats">
@@ -110,7 +150,7 @@
                     <th width="80">Undangan</th>
                     <th width="80">Share</th>
                     <th width="120">Kategori</th>
-                    <th width="40"></th>
+                    <th width="70">Opsi</th>
                 </tr>
             </thead>
             <tbody id="list-tabel"></tbody>
@@ -119,24 +159,64 @@
 
 <script>
     let db_undangan = JSON.parse(localStorage.getItem('undangan_v2')) || [];
+    let idEditAktif = null; 
 
-    function tambahTamu() {
+    // === FITUR SIMPAN & EDIT ===
+    function simpanData() {
         const nama = document.getElementById('u-nama').value.trim();
+        const tipe = document.getElementById('u-tipe').value;
+        const kategori = document.getElementById('u-kategori').value;
+
         if(!nama) return alert("Nama tidak boleh kosong!");
 
-        const data = {
-            id: Date.now(),
-            nama: nama,
-            tipe: document.getElementById('u-tipe').value,
-            kategori: document.getElementById('u-kategori').value,
-            undangan_ready: false,
-            share_ready: false
-        };
+        if (idEditAktif) {
+            const idx = db_undangan.findIndex(x => x.id === idEditAktif);
+            if(idx !== -1) {
+                db_undangan[idx].nama = nama;
+                db_undangan[idx].tipe = tipe;
+                db_undangan[idx].kategori = kategori;
+            }
+            batalEdit(); 
+        } else {
+            const data = {
+                id: Date.now(),
+                nama: nama,
+                tipe: tipe,
+                kategori: kategori,
+                undangan_ready: false,
+                share_ready: false
+            };
+            db_undangan.push(data);
+            document.getElementById('u-nama').value = ""; 
+        }
+        save(); render();
+    }
 
-        db_undangan.push(data);
-        save();
+    function editData(id) {
+        const tamu = db_undangan.find(x => x.id === id);
+        if(!tamu) return;
+        document.getElementById('u-nama').value = tamu.nama;
+        document.getElementById('u-tipe').value = tamu.tipe;
+        document.getElementById('u-kategori').value = tamu.kategori;
+        idEditAktif = id;
+        document.getElementById('form-title').innerText = "Edit Tamu Undangan";
+        
+        const btnSubmit = document.getElementById('btn-submit');
+        btnSubmit.innerText = "💾 UPDATE DATA";
+        btnSubmit.style.background = "var(--c-edit)";
+        document.getElementById('btn-cancel').style.display = "block";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function batalEdit() {
+        idEditAktif = null;
         document.getElementById('u-nama').value = "";
-        render();
+        document.getElementById('form-title').innerText = "Tambah Tamu Undangan";
+        
+        const btnSubmit = document.getElementById('btn-submit');
+        btnSubmit.innerText = "TAMBAH KE DAFTAR";
+        btnSubmit.style.background = "#0f172a";
+        document.getElementById('btn-cancel').style.display = "none";
     }
 
     function toggleCheck(id, field) {
@@ -148,10 +228,10 @@
     }
 
     function hapus(id) {
-        if(confirm("Hapus tamu ini?")) {
+        if(confirm("Yakin ingin menghapus tamu ini?")) {
             db_undangan = db_undangan.filter(x => x.id !== id);
-            save();
-            render();
+            if(id === idEditAktif) batalEdit(); 
+            save(); render();
         }
     }
 
@@ -159,25 +239,103 @@
         localStorage.setItem('undangan_v2', JSON.stringify(db_undangan));
     }
 
+    // === FITUR BARU: EXPORT EXCEL (CSV) ===
+    function exportExcel() {
+        if(db_undangan.length === 0) return alert("Belum ada data untuk diekspor!");
+        
+        // Header
+        let csvContent = "No,Nama Lengkap,Tipe,Status Undangan,Status Share,Kategori\n";
+        
+        // Data
+        db_undangan.forEach((u, index) => {
+            let statusUndangan = u.undangan_ready ? "Selesai" : "Belum";
+            let statusShare = u.share_ready ? "Selesai" : "Belum";
+            // Escape koma pada nama jika ada
+            let namaAman = `"${u.nama}"`;
+            csvContent += `${index + 1},${namaAman},${u.tipe},${statusUndangan},${statusShare},${u.kategori}\n`;
+        });
+
+        // Download mechanism
+        let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        let link = document.createElement("a");
+        let url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", "Daftar_Tamu_Undangan.csv");
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // === FITUR BARU: BACKUP DATA (JSON) ===
+    function backupData() {
+        if(db_undangan.length === 0) return alert("Belum ada data untuk di-backup!");
+        
+        let dataStr = JSON.stringify(db_undangan, null, 2);
+        let blob = new Blob([dataStr], { type: 'application/json' });
+        let link = document.createElement("a");
+        let url = URL.createObjectURL(blob);
+        
+        link.setAttribute("href", url);
+        link.setAttribute("download", `Backup_Undangan_${new Date().getTime()}.json`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // === FITUR BARU: RESTORE DATA (JSON) ===
+    function restoreData(event) {
+        const file = event.target.files[0];
+        if(!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const dataRestored = JSON.parse(e.target.result);
+                if(Array.isArray(dataRestored)) {
+                    if(confirm("Apakah Anda yakin ingin menimpa data yang ada dengan data dari file backup?")) {
+                        db_undangan = dataRestored;
+                        save();
+                        render();
+                        alert("Data berhasil di-restore!");
+                    }
+                } else {
+                    alert("Format file tidak sesuai!");
+                }
+            } catch (err) {
+                alert("Gagal membaca file backup!");
+            }
+        };
+        reader.readAsText(file);
+        // Reset input file agar bisa pilih file yang sama lagi
+        event.target.value = "";
+    }
+
+    // === RENDER TABEL ===
     function render() {
         const tbody = document.getElementById('list-tabel');
         let html = "";
-        
         let cTotal = db_undangan.length;
-        let cOnline = 0;
-        let cCetak = 0;
+        let cOnline = 0; let cCetak = 0;
 
         db_undangan.forEach((u, i) => {
             if(u.tipe === 'Online') cOnline++; else cCetak++;
 
-            // Mapping Class CSS
-            let catClass = "";
+            let catClass = "cat-lain"; 
             switch(u.kategori) {
+                case "Keluarga Pria": catClass = "cat-kel-pria"; break;
+                case "Keluarga Wanita": catClass = "cat-kel-wanita"; break;
+                case "Tetangga": catClass = "cat-tetangga"; break;
+                case "VIP": catClass = "cat-vip"; break;
+                case "Teman SD": catClass = "cat-sd"; break;
                 case "Teman SMP": catClass = "cat-smp"; break;
-                case "Teman SMK": catClass = "cat-smk"; break;
-                case "Teman Kostan": catClass = "cat-kost"; break;
+                case "Teman SMA/SMK": catClass = "cat-smk"; break;
                 case "Teman Kuliah": catClass = "cat-kuliah"; break;
+                case "Teman Kostan": catClass = "cat-kost"; break;
                 case "Teman Kerja": catClass = "cat-kerja"; break;
+                case "Rekan Bisnis": catClass = "cat-bisnis"; break;
+                case "Lain-lain": catClass = "cat-lain"; break;
+                default: if(u.kategori === "Teman SMK") catClass = "cat-smk";
             }
 
             let typeClass = (u.tipe === "Online") ? "type-online" : "type-cetak";
@@ -190,14 +348,16 @@
                     <td align="center"><input type="checkbox" ${u.undangan_ready ? 'checked' : ''} onchange="toggleCheck(${u.id}, 'undangan_ready')"></td>
                     <td align="center"><input type="checkbox" ${u.share_ready ? 'checked' : ''} onchange="toggleCheck(${u.id}, 'share_ready')"></td>
                     <td align="center"><span class="badge ${catClass}" style="width:100%">${u.kategori}</span></td>
-                    <td align="center"><button class="btn-del" onclick="hapus(${u.id})">×</button></td>
+                    <td align="center" class="action-cell">
+                        <button class="btn-icon btn-edit" onclick="editData(${u.id})" title="Edit">✏️</button>
+                        <button class="btn-icon btn-del" onclick="hapus(${u.id})" title="Hapus">✖</button>
+                    </td>
                 </tr>
             `;
         });
 
         tbody.innerHTML = html || '<tr><td colspan="7" align="center" style="padding:20px; color:#94a3b8;">Belum ada tamu undangan.</td></tr>';
         
-        // Update Stats
         document.getElementById('count-total').innerText = cTotal;
         document.getElementById('count-online').innerText = cOnline;
         document.getElementById('count-cetak').innerText = cCetak;
