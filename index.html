@@ -28,45 +28,41 @@
         h2 { margin-top: 0; font-size: 18px; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
 
         label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #64748b; }
-        input[type="text"], select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; transition: 0.2s; }
-        input:focus { border-color: var(--header-table); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
+        input[type="text"], select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; transition: 0.2s; }
+        input:focus, textarea:focus { border-color: var(--header-table); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
         
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-add { width: 100%; padding: 14px; background: #0f172a; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; }
-        .btn-add:active { transform: scale(0.98); }
         .btn-cancel { width: 100%; padding: 12px; background: #94a3b8; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; display: none; }
+        .btn-bulk { width: 100%; padding: 12px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; display: block; }
 
+        /* TOOLBAR */
         .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
-        .btn-tool { flex: 1; min-width: 80px; padding: 10px; font-size: 11px; font-weight: bold; color: white; border: none; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .btn-tool { flex: 1; min-width: 75px; padding: 10px 5px; font-size: 10px; font-weight: bold; color: white; border: none; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
         .btn-tool.print { background: #64748b; }
         .btn-tool.excel { background: #10b981; }
         .btn-tool.backup { background: #3b82f6; }
         .btn-tool.restore { background: #8b5cf6; }
+        .btn-tool.settings { background: #475569; } /* Tombol Pengaturan */
 
         .stats { display: flex; gap: 10px; margin-bottom: 15px; }
         .stat-box { flex: 1; background: #fff; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #e2e8f0; }
         .stat-val { font-size: 16px; font-weight: bold; display: block; }
         .stat-lbl { font-size: 10px; color: #64748b; text-transform: uppercase; }
 
-        /* SPREADSHEET UPGRADES */
         .search-box { margin-bottom: 15px; }
         .search-box input { margin-bottom: 0; background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%2394a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>') no-repeat 12px center; padding-left: 35px; }
         
-        /* Table Wrapper with Scroll & Sticky Header */
         .table-wrapper { background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow-x: auto; max-height: 450px; overflow-y: auto; }
         table { width: 100%; border-collapse: collapse; min-width: 650px; font-size: 12px; }
-        th { background: var(--header-table); color: white; padding: 12px 8px; text-align: left; border: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 10; cursor: pointer; user-select: none; transition: background 0.2s; }
-        th:hover { background: #0284c7; }
+        th { background: var(--header-table); color: white; padding: 12px 8px; text-align: left; border: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 10; cursor: pointer; user-select: none; }
         td { padding: 10px 8px; border: 1px solid #e2e8f0; vertical-align: middle; background: #fff; }
-
-        /* Sort Indicator */
-        .sort-icon { font-size: 10px; margin-left: 4px; opacity: 0.5; }
-        th.active-sort .sort-icon { opacity: 1; color: #fef08a; }
-
+        
         .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; display: inline-block; text-align: center; }
         .type-online { background: var(--c-online); color: white; }
         .type-cetak { background: var(--c-cetak); color: white; }
         
+        /* WARNA KATEGORI */
         .cat-smp { background: var(--c-smp); color: var(--t-smp); }
         .cat-smk { background: var(--c-smk); color: var(--t-smk); }
         .cat-kost { background: var(--c-kost); color: var(--t-kost); }
@@ -79,21 +75,26 @@
         .cat-bisnis { background: var(--c-bisnis); color: var(--t-bisnis); }
         .cat-vip { background: var(--c-vip); color: var(--t-vip); }
         .cat-lain { background: var(--c-lain); color: var(--t-lain); }
+        
+        .sort-icon { font-size: 10px; margin-left: 4px; opacity: 0.5; }
 
         input[type="checkbox"] { width: 18px; height: 18px; accent-color: #0f172a; cursor: pointer; }
         .action-cell { display: flex; gap: 8px; justify-content: center; }
-        .btn-icon { background: none; border: none; font-size: 16px; cursor: pointer; padding: 4px; border-radius: 4px; transition: 0.2s; }
+        .btn-icon { background: none; border: none; font-size: 16px; cursor: pointer; padding: 4px; border-radius: 4px; }
         .btn-del { color: #ef4444; font-weight: bold; }
         .btn-edit { color: var(--c-edit); }
 
+        /* MODALS */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999; align-items: center; justify-content: center; padding: 15px; }
+        .modal-content { background: white; padding: 20px; border-radius: 12px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+        .preview-container { background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; max-height: 250px; overflow-y: auto; margin-bottom: 15px; }
+
         @media print {
-            body { padding: 0; background: white; }
             .card, .toolbar, .stats, .search-box, .action-cell, th:last-child, td:last-child { display: none !important; }
             .table-wrapper { border: none; overflow: visible; max-height: none; }
             table { width: 100%; border: 1px solid #000; }
             th { background: #e2e8f0 !important; color: #000 !important; border: 1px solid #000; position: static; }
             td { border: 1px solid #000; }
-            .badge { border: 1px solid #000; }
         }
     </style>
 </head>
@@ -132,13 +133,15 @@
         </div>
         <button id="btn-submit" class="btn-add" onclick="simpanData()">TAMBAH KE DAFTAR</button>
         <button id="btn-cancel" class="btn-cancel" onclick="batalEdit()">BATAL EDIT</button>
+        <button id="btn-bulk-open" class="btn-bulk" onclick="bukaModalBulk()">📋 PASTE BANYAK NAMA</button>
     </div>
 
     <div class="toolbar">
-        <button class="btn-tool print" onclick="window.print()"><span>🖨️</span> Print / PDF</button>
-        <button class="btn-tool excel" onclick="exportExcel()"><span>📊</span> Excel (CSV)</button>
+        <button class="btn-tool print" onclick="window.print()"><span>🖨️</span> PDF</button>
+        <button class="btn-tool excel" onclick="exportExcel()"><span>📊</span> Excel</button>
         <button class="btn-tool backup" onclick="backupData()"><span>💾</span> Backup</button>
         <button class="btn-tool restore" onclick="document.getElementById('file-restore').click()"><span>📂</span> Restore</button>
+        <button class="btn-tool settings" onclick="bukaPengaturan()"><span>⚙️</span> Pengaturan</button>
         <input type="file" id="file-restore" accept=".json" style="display:none" onchange="restoreData(event)">
     </div>
 
@@ -147,9 +150,8 @@
         <div class="stat-box"><span class="stat-val" id="count-online">0</span><span class="stat-lbl">Online</span></div>
         <div class="stat-box"><span class="stat-val" id="count-cetak">0</span><span class="stat-lbl">Cetak</span></div>
     </div>
-
     <div class="search-box">
-        <input type="text" id="search-input" placeholder="Cari nama tamu atau kategori..." onkeyup="render()">
+        <input type="text" id="search-input" placeholder="Cari nama atau kategori..." onkeyup="render()">
     </div>
 
     <div class="table-wrapper">
@@ -158,10 +160,10 @@
                 <tr>
                     <th width="40">Tr</th>
                     <th onclick="urutkanData('nama')" id="th-nama">Nama <span class="sort-icon">↕</span></th>
-                    <th width="100" onclick="urutkanData('tipe')" id="th-tipe">Tipe <span class="sort-icon">↕</span></th>
-                    <th width="80" onclick="urutkanData('undangan_ready')" id="th-undangan_ready">Undangan <span class="sort-icon">↕</span></th>
-                    <th width="80" onclick="urutkanData('share_ready')" id="th-share_ready">Share <span class="sort-icon">↕</span></th>
-                    <th width="120" onclick="urutkanData('kategori')" id="th-kategori">Kategori <span class="sort-icon">↕</span></th>
+                    <th width="100" onclick="urutkanData('tipe')">Tipe</th>
+                    <th width="80">Undangan</th>
+                    <th width="80">Share</th>
+                    <th width="120">Kategori</th>
                     <th width="70">Opsi</th>
                 </tr>
             </thead>
@@ -169,31 +171,102 @@
         </table>
     </div>
 
+    <div id="modal-settings" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top:0; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">⚙️ Dashboard Pengaturan</h3>
+            
+            <div style="border: 1px solid #f87171; background: #fef2f2; padding: 15px; border-radius: 8px; text-align: center; margin-top: 15px;">
+                <h4 style="margin-top:0; color: #b91c1c;">ZONA BERBAHAYA</h4>
+                <p style="font-size: 12px; color: #7f1d1d; margin-bottom: 15px;">Tindakan ini akan menghapus <b>seluruh</b> daftar tamu undangan secara permanen. Pastikan Anda sudah melakukan Backup (Cadangkan Data) sebelumnya.</p>
+                <button class="btn-add" style="background:#ef4444;" onclick="hapusSemua()">🗑️ HAPUS SEMUA DATA</button>
+            </div>
+            
+            <button class="btn-cancel" style="display:block; margin-top:15px; width:100%; background:white; color:#64748b; border:1px solid #cbd5e1;" onclick="tutupPengaturan()">Tutup Pengaturan</button>
+        </div>
+    </div>
+
+    <div id="modal-bulk" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top:0">📋 Paste Banyak Nama</h3>
+            <div id="bulk-step-1">
+                <textarea id="bulk-text" rows="6" placeholder="Paste daftar nama di sini..."></textarea>
+                <div class="grid">
+                    <div><label>Tipe:</label><select id="bulk-tipe"><option value="Online">Online</option><option value="Cetak">Cetak</option></select></div>
+                    <div><label>Kategori:</label><select id="bulk-kategori">
+                        <option value="Teman Kerja">Teman Kerja</option>
+                        <option value="Keluarga Pria">Keluarga Pria</option>
+                        <option value="Keluarga Wanita">Keluarga Wanita</option>
+                        <option value="Tetangga">Tetangga</option>
+                        <option value="VIP">VIP</option>
+                        <option value="Teman SD">Teman SD</option>
+                        <option value="Teman SMP">Teman SMP</option>
+                        <option value="Teman SMA/SMK">Teman SMA/SMK</option>
+                        <option value="Teman Kuliah">Teman Kuliah</option>
+                        <option value="Teman Kostan">Teman Kostan</option>
+                        <option value="Rekan Bisnis">Rekan Bisnis</option>
+                        <option value="Lain-lain">Lain-lain</option>
+                    </select></div>
+                </div>
+                <button class="btn-add" style="background:#38bdf8; margin-top:10px" onclick="prosesBulk()">PROSES</button>
+                <button class="btn-cancel" style="display:block" onclick="tutupModalBulk()">Batal</button>
+            </div>
+            <div id="bulk-step-2" style="display:none">
+                <p style="font-size:12px; color:red">Perbaiki nama di bawah sebelum disimpan:</p>
+                <div id="bulk-preview-list" class="preview-container"></div>
+                <button class="btn-add" style="background:#10b981" onclick="simpanBulkFinal()">✅ SIMPAN SEMUA</button>
+                <button class="btn-cancel" style="display:block" onclick="kembaliBulk()">Kembali</button>
+            </div>
+        </div>
+    </div>
+
 <script>
     let db_undangan = JSON.parse(localStorage.getItem('undangan_v2')) || [];
-    let idEditAktif = null; 
-    let sortBy = ''; 
-    let sortAsc = true;
+    let idEditAktif = null; let sortBy = ''; let sortAsc = true;
 
-    // SIMPAN & EDIT
+    function save() { localStorage.setItem('undangan_v2', JSON.stringify(db_undangan)); }
+
     function simpanData() {
         const nama = document.getElementById('u-nama').value.trim();
         const tipe = document.getElementById('u-tipe').value;
         const kategori = document.getElementById('u-kategori').value;
-
-        if(!nama) return alert("Nama tidak boleh kosong!");
+        if(!nama) return alert("Nama kosong!");
 
         if (idEditAktif) {
             const idx = db_undangan.findIndex(x => x.id === idEditAktif);
-            if(idx !== -1) {
-                db_undangan[idx].nama = nama; db_undangan[idx].tipe = tipe; db_undangan[idx].kategori = kategori;
-            }
+            if(idx !== -1) { db_undangan[idx].nama = nama; db_undangan[idx].tipe = tipe; db_undangan[idx].kategori = kategori; }
             batalEdit(); 
         } else {
-            db_undangan.push({ id: Date.now(), nama: nama, tipe: tipe, kategori: kategori, undangan_ready: false, share_ready: false });
-            document.getElementById('u-nama').value = ""; 
+            db_undangan.push({ id: Date.now(), nama, tipe, kategori, undangan_ready: false, share_ready: false });
+            document.getElementById('u-nama').value = "";
         }
         save(); render();
+    }
+
+    function hapus(id) {
+        if(confirm("Hapus tamu ini?")) { db_undangan = db_undangan.filter(x => x.id !== id); save(); render(); }
+    }
+
+    // === MODAL PENGATURAN & HAPUS SEMUA ===
+    function bukaPengaturan() {
+        document.getElementById('modal-settings').style.display = 'flex';
+    }
+    
+    function tutupPengaturan() {
+        document.getElementById('modal-settings').style.display = 'none';
+    }
+
+    function hapusSemua() {
+        if (db_undangan.length === 0) return alert("Data sudah kosong, Bos!");
+
+        if (confirm("⚠️ PERINGATAN KERAS! ⚠️\n\nApakah Bos yakin ingin MENGHAPUS SEMUA data tamu? Tindakan ini tidak bisa dibatalkan.")) {
+            if (confirm("KONFIRMASI TERAKHIR: Beneran mau dikosongin semua datanya?")) {
+                db_undangan = [];
+                save();
+                render();
+                tutupPengaturan();
+                alert("Data berhasil dibersihkan!");
+            }
+        }
     }
 
     function editData(id) {
@@ -204,21 +277,60 @@
         document.getElementById('u-kategori').value = tamu.kategori;
         idEditAktif = id;
         document.getElementById('form-title').innerText = "Edit Tamu Undangan";
-        
-        const btnSubmit = document.getElementById('btn-submit');
-        btnSubmit.innerText = "💾 UPDATE DATA";
-        btnSubmit.style.background = "var(--c-edit)";
+        document.getElementById('btn-submit').innerText = "💾 UPDATE DATA";
         document.getElementById('btn-cancel').style.display = "block";
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function batalEdit() {
-        idEditAktif = null;
-        document.getElementById('u-nama').value = "";
+        idEditAktif = null; document.getElementById('u-nama').value = "";
         document.getElementById('form-title').innerText = "Tambah Tamu Undangan";
-        const btnSubmit = document.getElementById('btn-submit');
-        btnSubmit.innerText = "TAMBAH KE DAFTAR"; btnSubmit.style.background = "#0f172a";
+        document.getElementById('btn-submit').innerText = "TAMBAH KE DAFTAR";
         document.getElementById('btn-cancel').style.display = "none";
+    }
+
+    // BULK FUNCTIONS
+    function bukaModalBulk() { document.getElementById('modal-bulk').style.display = 'flex'; document.getElementById('bulk-step-1').style.display = 'block'; document.getElementById('bulk-step-2').style.display = 'none'; }
+    function tutupModalBulk() { document.getElementById('modal-bulk').style.display = 'none'; }
+    function kembaliBulk() { document.getElementById('bulk-step-1').style.display = 'block'; document.getElementById('bulk-step-2').style.display = 'none'; }
+    function prosesBulk() {
+        let text = document.getElementById('bulk-text').value;
+        let names = text.split(text.includes('\n') ? '\n' : ',');
+        let html = '';
+        names.forEach(n => {
+            let clean = n.replace(/^[0-9]+[\.\)]\s*/, '').replace(/^[\-\*]\s*/, '').trim();
+            if(clean) html += `<input type="text" class="bulk-input-item" value="${clean}" style="margin-bottom:8px">`;
+        });
+        if(!html) return alert("Nama tidak ditemukan");
+        document.getElementById('bulk-preview-list').innerHTML = html;
+        document.getElementById('bulk-step-1').style.display = 'none';
+        document.getElementById('bulk-step-2').style.display = 'block';
+    }
+    function simpanBulkFinal() {
+        let inputs = document.querySelectorAll('.bulk-input-item');
+        inputs.forEach((input, i) => {
+            let nama = input.value.trim();
+            if(nama) db_undangan.push({ id: Date.now() + i, nama, tipe: document.getElementById('bulk-tipe').value, kategori: document.getElementById('bulk-kategori').value, undangan_ready: false, share_ready: false });
+        });
+        save(); render(); tutupModalBulk();
+    }
+
+    function exportExcel() {
+        let csv = "No,Nama,Tipe,Undangan,Share,Kategori\n";
+        db_undangan.forEach((u, i) => csv += `${i+1},"${u.nama}",${u.tipe},${u.undangan_ready?'Y':'T'},${u.share_ready?'Y':'T'},${u.kategori}\n`);
+        let link = document.createElement("a"); link.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+        link.download = "Daftar_Undangan.csv"; link.click();
+    }
+
+    function backupData() {
+        let link = document.createElement("a"); link.href = URL.createObjectURL(new Blob([JSON.stringify(db_undangan)], {type:'application/json'}));
+        link.download = `Backup_Undangan.json`; link.click();
+    }
+
+    function restoreData(e) {
+        const reader = new FileReader();
+        reader.onload = (ev) => { db_undangan = JSON.parse(ev.target.result); save(); render(); alert("Data Restore Berhasil!"); };
+        reader.readAsText(e.target.files[0]);
     }
 
     function toggleCheck(id, field) {
@@ -226,106 +338,27 @@
         if(idx !== -1) { db_undangan[idx][field] = !db_undangan[idx][field]; save(); render(); }
     }
 
-    function hapus(id) {
-        if(confirm("Yakin ingin menghapus tamu ini?")) {
-            db_undangan = db_undangan.filter(x => x.id !== id);
-            if(id === idEditAktif) batalEdit(); 
-            save(); render();
-        }
-    }
-
-    function save() { localStorage.setItem('undangan_v2', JSON.stringify(db_undangan)); }
-
-    // SORTING (Spreadsheet feature)
-    function urutkanData(kolom) {
-        if (sortBy === kolom) {
-            sortAsc = !sortAsc; // Balik urutan jika klik kolom yang sama
-        } else {
-            sortBy = kolom;
-            sortAsc = true; // Default A-Z
-        }
-        
-        // Update Icon UI
-        document.querySelectorAll('th').forEach(th => {
-            th.classList.remove('active-sort');
-            let icon = th.querySelector('.sort-icon');
-            if(icon) icon.innerText = '↕';
-        });
-        
-        const activeTh = document.getElementById('th-' + kolom);
-        activeTh.classList.add('active-sort');
-        activeTh.querySelector('.sort-icon').innerText = sortAsc ? '▲' : '▼';
-
+    function urutkanData(k) {
+        if(sortBy === k) sortAsc = !sortAsc; else { sortBy = k; sortAsc = true; }
         render();
     }
 
-    // EXPORT & BACKUP
-    function exportExcel() {
-        let csvContent = "No,Nama Lengkap,Tipe,Status Undangan,Status Share,Kategori\n";
-        db_undangan.forEach((u, index) => {
-            let sU = u.undangan_ready ? "Selesai" : "Belum";
-            let sS = u.share_ready ? "Selesai" : "Belum";
-            csvContent += `${index + 1},"${u.nama}",${u.tipe},${sU},${sS},${u.kategori}\n`;
-        });
-        let link = document.createElement("a");
-        link.href = URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }));
-        link.download = "Daftar_Tamu_Undangan.csv"; link.click();
-    }
-
-    function backupData() {
-        let link = document.createElement("a");
-        link.href = URL.createObjectURL(new Blob([JSON.stringify(db_undangan, null, 2)], { type: 'application/json' }));
-        link.download = `Backup_Undangan_${new Date().getTime()}.json`; link.click();
-    }
-
-    function restoreData(event) {
-        const file = event.target.files[0];
-        if(!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const dataRestored = JSON.parse(e.target.result);
-                if(Array.isArray(dataRestored) && confirm("Timpa data saat ini dengan file backup?")) {
-                    db_undangan = dataRestored; save(); render(); alert("Data berhasil di-restore!");
-                }
-            } catch (err) { alert("Format file tidak sesuai!"); }
-        };
-        reader.readAsText(file); event.target.value = "";
-    }
-
-    // RENDER (WITH SEARCH & SORT)
     function render() {
         const tbody = document.getElementById('list-tabel');
-        const keyword = document.getElementById('search-input').value.toLowerCase();
+        const key = document.getElementById('search-input').value.toLowerCase();
         
-        let cTotal = db_undangan.length;
-        let cOnline = 0; let cCetak = 0;
-
-        // Hitung Stat Asli (Bukan dari hasil filter)
-        db_undangan.forEach(u => { if(u.tipe === 'Online') cOnline++; else cCetak++; });
+        let cTotal = db_undangan.length; let cOnline = 0; let cCetak = 0;
+        db_undangan.forEach(u => u.tipe === 'Online' ? cOnline++ : cCetak++);
         document.getElementById('count-total').innerText = cTotal;
         document.getElementById('count-online').innerText = cOnline;
         document.getElementById('count-cetak').innerText = cCetak;
 
-        // 1. Filter Data
-        let dataTampil = db_undangan.filter(u => 
-            u.nama.toLowerCase().includes(keyword) || 
-            u.kategori.toLowerCase().includes(keyword)
-        );
-
-        // 2. Sort Data
-        if (sortBy) {
-            dataTampil.sort((a, b) => {
-                let valA = typeof a[sortBy] === 'string' ? a[sortBy].toLowerCase() : a[sortBy];
-                let valB = typeof b[sortBy] === 'string' ? b[sortBy].toLowerCase() : b[sortBy];
-                if (valA < valB) return sortAsc ? -1 : 1;
-                if (valA > valB) return sortAsc ? 1 : -1;
-                return 0;
-            });
-        }
+        let filtered = db_undangan.filter(u => u.nama.toLowerCase().includes(key) || u.kategori.toLowerCase().includes(key));
+        if(sortBy) filtered.sort((a,b) => (a[sortBy] > b[sortBy] ? 1 : -1) * (sortAsc ? 1 : -1));
 
         let html = "";
-        dataTampil.forEach((u, i) => {
+        filtered.forEach((u, i) => {
+            // MENGEMBALIKAN WARNA KATEGORI
             let catClass = "cat-lain"; 
             switch(u.kategori) {
                 case "Keluarga Pria": catClass = "cat-kel-pria"; break;
@@ -342,27 +375,22 @@
                 case "Lain-lain": catClass = "cat-lain"; break;
                 default: if(u.kategori === "Teman SMK") catClass = "cat-smk";
             }
-            let typeClass = (u.tipe === "Online") ? "type-online" : "type-cetak";
 
-            html += `
-                <tr>
-                    <td align="center">${i + 1}</td>
-                    <td><b>${u.nama}</b></td>
-                    <td align="center"><span class="badge ${typeClass}">${u.tipe}</span></td>
-                    <td align="center"><input type="checkbox" ${u.undangan_ready ? 'checked' : ''} onchange="toggleCheck(${u.id}, 'undangan_ready')"></td>
-                    <td align="center"><input type="checkbox" ${u.share_ready ? 'checked' : ''} onchange="toggleCheck(${u.id}, 'share_ready')"></td>
-                    <td align="center"><span class="badge ${catClass}" style="width:100%">${u.kategori}</span></td>
-                    <td align="center" class="action-cell">
-                        <button class="btn-icon btn-edit" onclick="editData(${u.id})" title="Edit">✏️</button>
-                        <button class="btn-icon btn-del" onclick="hapus(${u.id})" title="Hapus">✖</button>
-                    </td>
-                </tr>
-            `;
+            html += `<tr>
+                <td align="center">${i+1}</td>
+                <td><b>${u.nama}</b></td>
+                <td align="center"><span class="badge ${u.tipe==='Online'?'type-online':'type-cetak'}">${u.tipe}</span></td>
+                <td align="center"><input type="checkbox" ${u.undangan_ready?'checked':''} onchange="toggleCheck(${u.id},'undangan_ready')"></td>
+                <td align="center"><input type="checkbox" ${u.share_ready?'checked':''} onchange="toggleCheck(${u.id},'share_ready')"></td>
+                <td align="center"><span class="badge ${catClass}" style="width:100%">${u.kategori}</span></td>
+                <td align="center" class="action-cell">
+                    <button class="btn-icon btn-edit" onclick="editData(${u.id})">✏️</button>
+                    <button class="btn-icon btn-del" onclick="hapus(${u.id})">✖</button>
+                </td>
+            </tr>`;
         });
-
-        tbody.innerHTML = html || `<tr><td colspan="7" align="center" style="padding:20px; color:#94a3b8;">${keyword ? 'Pencarian tidak ditemukan.' : 'Belum ada tamu undangan.'}</td></tr>`;
+        tbody.innerHTML = html || '<tr><td colspan="7" align="center" style="padding: 20px; color: #64748b;">Data Kosong</td></tr>';
     }
-
     render();
 </script>
 </body>
