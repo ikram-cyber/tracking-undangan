@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Manajemen Daftar Undangan</title>
+    <style>
+        :root { 
+            --bg: #f1f5f9;
+            --header-table: #38bdf8;
+            /* Warna Kategori sesuai Gambar */
+            --c-smp: #fef08a; --t-smp: #854d0e;
+            --c-smk: #bbf7d0; --t-smk: #166534;
+            --c-kost: #1d4ed8; --t-kost: #ffffff;
+            --c-kuliah: #e9d5ff; --t-kuliah: #6b21a8;
+            --c-kerja: #fbcfe8; --t-kerja: #9d174d;
+            --c-online: #ef4444;
+            --c-cetak: #60a5fa;
+        }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        body { background: var(--bg); margin: 0; padding: 15px; color: #334155; }
+        
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); margin-bottom: 20px; }
+        h2 { margin-top: 0; font-size: 18px; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+
+        /* Form Styling */
+        label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #64748b; }
+        input[type="text"], select { 
+            width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #cbd5e1; 
+            border-radius: 8px; font-size: 14px; outline: none; transition: 0.2s;
+        }
+        input:focus { border-color: var(--header-table); ring: 2px var(--header-table); }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-add { 
+            width: 100%; padding: 14px; background: #0f172a; color: white; 
+            border: none; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer;
+        }
+        .btn-add:active { transform: scale(0.98); }
+
+        /* Table Styling ala Spreadsheet */
+        .table-wrapper { background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; font-size: 12px; }
+        th { background: var(--header-table); color: white; padding: 12px 8px; text-align: left; border: 1px solid #e2e8f0; }
+        td { padding: 10px 8px; border: 1px solid #e2e8f0; vertical-align: middle; background: #fff; }
+
+        /* Badge & Checkbox */
+        .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; display: inline-block; text-align: center; }
+        .type-online { background: var(--c-online); color: white; }
+        .type-cetak { background: var(--c-cetak); color: white; }
+        
+        .cat-smp { background: var(--c-smp); color: var(--t-smp); }
+        .cat-smk { background: var(--c-smk); color: var(--t-smk); }
+        .cat-kost { background: var(--c-kost); color: var(--t-kost); }
+        .cat-kuliah { background: var(--c-kuliah); color: var(--t-kuliah); }
+        .cat-kerja { background: var(--c-kerja); color: var(--t-kerja); }
+
+        input[type="checkbox"] { width: 18px; height: 18px; accent-color: #0f172a; cursor: pointer; }
+        .btn-del { color: #ef4444; background: none; border: none; font-size: 16px; cursor: pointer; font-weight: bold; }
+
+        /* Statistik Singkat */
+        .stats { display: flex; gap: 10px; margin-bottom: 15px; }
+        .stat-box { flex: 1; background: #fff; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #e2e8f0; }
+        .stat-val { font-size: 16px; font-weight: bold; display: block; }
+        .stat-lbl { font-size: 10px; color: #64748b; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Tambah Tamu Undangan</h2>
+        <label>Nama Lengkap</label>
+        <input type="text" id="u-nama" placeholder="Masukkan nama tamu...">
+        
+        <div class="grid">
+            <div>
+                <label>Media Undangan</label>
+                <select id="u-tipe">
+                    <option value="Online">Online</option>
+                    <option value="Cetak">Cetak</option>
+                </select>
+            </div>
+            <div>
+                <label>Kategori</label>
+                <select id="u-kategori">
+                    <option value="Teman SMP">Teman SMP</option>
+                    <option value="Teman SMK">Teman SMK</option>
+                    <option value="Teman Kostan">Teman Kostan</option>
+                    <option value="Teman Kuliah">Teman Kuliah</option>
+                    <option value="Teman Kerja">Teman Kerja</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn-add" onclick="tambahTamu()">TAMBAH KE DAFTAR</button>
+    </div>
+
+    <div class="stats">
+        <div class="stat-box"><span class="stat-val" id="count-total">0</span><span class="stat-lbl">Total</span></div>
+        <div class="stat-box"><span class="stat-val" id="count-online">0</span><span class="stat-lbl">Online</span></div>
+        <div class="stat-box"><span class="stat-val" id="count-cetak">0</span><span class="stat-lbl">Cetak</span></div>
+    </div>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th width="40">Tr</th>
+                    <th>Nama</th>
+                    <th width="100">Online/Cetak</th>
+                    <th width="80">Undangan</th>
+                    <th width="80">Share</th>
+                    <th width="120">Kategori</th>
+                    <th width="40"></th>
+                </tr>
+            </thead>
+            <tbody id="list-tabel"></tbody>
+        </table>
+    </div>
+
+<script>
+    let db_undangan = JSON.parse(localStorage.getItem('undangan_v2')) || [];
+
+    function tambahTamu() {
+        const nama = document.getElementById('u-nama').value.trim();
+        if(!nama) return alert("Nama tidak boleh kosong!");
+
+        const data = {
+            id: Date.now(),
+            nama: nama,
+            tipe: document.getElementById('u-tipe').value,
+            kategori: document.getElementById('u-kategori').value,
+            undangan_ready: false,
+            share_ready: false
+        };
+
+        db_undangan.push(data);
+        save();
+        document.getElementById('u-nama').value = "";
+        render();
+    }
+
+    function toggleCheck(id, field) {
+        const idx = db_undangan.findIndex(x => x.id === id);
+        if(idx !== -1) {
+            db_undangan[idx][field] = !db_undangan[idx][field];
+            save();
+        }
+    }
+
+    function hapus(id) {
+        if(confirm("Hapus tamu ini?")) {
+            db_undangan = db_undangan.filter(x => x.id !== id);
+            save();
+            render();
+        }
+    }
+
+    function save() {
+        localStorage.setItem('undangan_v2', JSON.stringify(db_undangan));
+    }
+
+    function render() {
+        const tbody = document.getElementById('list-tabel');
+        let html = "";
+        
+        let cTotal = db_undangan.length;
+        let cOnline = 0;
+        let cCetak = 0;
+
+        db_undangan.forEach((u, i) => {
+            if(u.tipe === 'Online') cOnline++; else cCetak++;
+
+            // Mapping Class CSS
+            let catClass = "";
+            switch(u.kategori) {
+                case "Teman SMP": catClass = "cat-smp"; break;
+                case "Teman SMK": catClass = "cat-smk"; break;
+                case "Teman Kostan": catClass = "cat-kost"; break;
+                case "Teman Kuliah": catClass = "cat-kuliah"; break;
+                case "Teman Kerja": catClass = "cat-kerja"; break;
+            }
+
+            let typeClass = (u.tipe === "Online") ? "type-online" : "type-cetak";
+
+            html += `
+                <tr>
+                    <td align="center">${i + 1}</td>
+                    <td><b>${u.nama}</b></td>
+                    <td align="center"><span class="badge ${typeClass}">${u.tipe}</span></td>
+                    <td align="center"><input type="checkbox" ${u.undangan_ready ? 'checked' : ''} onchange="toggleCheck(${u.id}, 'undangan_ready')"></td>
+                    <td align="center"><input type="checkbox" ${u.share_ready ? 'checked' : ''} onchange="toggleCheck(${u.id}, 'share_ready')"></td>
+                    <td align="center"><span class="badge ${catClass}" style="width:100%">${u.kategori}</span></td>
+                    <td align="center"><button class="btn-del" onclick="hapus(${u.id})">×</button></td>
+                </tr>
+            `;
+        });
+
+        tbody.innerHTML = html || '<tr><td colspan="7" align="center" style="padding:20px; color:#94a3b8;">Belum ada tamu undangan.</td></tr>';
+        
+        // Update Stats
+        document.getElementById('count-total').innerText = cTotal;
+        document.getElementById('count-online').innerText = cOnline;
+        document.getElementById('count-cetak').innerText = cCetak;
+    }
+
+    render();
+</script>
+</body>
+</html>
